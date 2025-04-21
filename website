@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banye's Projects</title>
+  <style>
+    body {
+      font-family: Times New Roman, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #007acc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    section {
+      padding: 20px;
+    }
+    .project {
+      background: white;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .project h2 {
+      margin-top: 0;
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Projects Portfolio</h1>
+  </header>
+
+  <section>
+    <div class="project">
+      <h2>Cyber Lab Home Network</h2>
+      <p>Set up using Kali Linux, 2 Cisco Routers, 2 Switches. Integrated with TFTP server and Vagrant VMs.</p>
+    </div>
+
+    <div class="project">
+      <h2>Vagrant Virtualization for Security Testing</h2>
+      <p>Used Metasploitable 3 and Kali VM with Vagrant and VirtualBox for penetration testing training.</p>
+    </div>
+
+    <div class="project">
+      <h2>Network Monitoring using Glances</h2>
+      <p>Implemented Glances on Kali to monitor VM network traffic and system resources.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 My Portfolio</p>
+  </footer>
+</body>
+</html>
+
