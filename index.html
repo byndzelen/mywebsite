@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Life Time Projects</title>
+  <title>My Projects</title>
   <style>
     body {
       font-family: Times New Roman, sans-serif;
@@ -46,6 +47,15 @@
       width: 100%;
       bottom: 0;
     }
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .goal-list, .device-list {
+      margin-left: 20px;
+    }
   </style>
 </head>
 <body>
@@ -55,13 +65,232 @@
 
   <section>
     <div class="project">
-      <h2>Cyber Lab Home Network</h2>
+      <h2>Cyber Lab &copy;Home Network</h2>
       <p>Set up using Kali Linux, 2 Cisco Routers, 2 Switches. Integrated with TFTP server and Vagrant VMs.</p>
     </div>
 
     <div class="project">
-      <h2>Virtualization for Security Testing</h2>
-      <p>Used Metasploitable 3 and Kali VM with VirtualBox for penetration testing training.</p>
+      <h2>Vagrant Virtualization for Security Testing</h2>
+      <p>Used Metasploitable 3 and Kali VM with Vagrant and VirtualBox for penetration testing training.</p>
+    </div>
+
+    <div class="project">
+      <h2>Basic Network using STP + Inter-Vlan Routing</h2>
+      <h3>Goal:</h3>
+      <ul class="goal-list">
+        <li>Set up 2 switches with STP</li>
+        <li>Connect to a router for inter-VLAN routing</li>
+        <li>Configure STP to prevent loops</li>
+        <li>Practice basic switch hardening and verification</li>
+      </ul>
+      
+      <h3>Network Topology</h3>
+      <pre>
+[Router]
+|
+[SW1]-[SW2]
+|
+PCs
+      </pre>
+      
+      <h3>Devices Used:</h3>
+      <ul class="device-list">
+        <li>2x Cisco switches (real or Packet Tracer)</li>
+        <li>1x Cisco router</li>
+        <li>2x PCs (optional for testing)</li>
+        <li>Ethernet cables</li>
+      </ul>
+      
+      <h3>Connection Instructions</h3>
+      <ol>
+        <li>Router G0/0 → Switch1 F0/1 (trunk)</li>
+        <li>Switch1 F0/2 ↔ Switch2 F0/2 (trunk)</li>
+        <li>PC1 → SW1 F0/3</li>
+        <li>PC2 → SW2 F0/3</li>
+      </ol>
+      
+      <h3>Configuration Commands</h3>
+      <h4>Switch 1: Configure VLANs + STP</h4>
+      <pre>
+enable
+configure terminal
+hostname SW1
+vlan 10
+name IT
+vlan 20
+name HR
+interface range f0/1 - 2
+switchport mode trunk
+interface f0/3
+switchport mode access
+switchport access vlan 10
+spanning-tree mode pvst
+spanning-tree vlan 10,20 priority 4096
+exit
+      </pre>
+      
+      <h4>Switch 2: VLANs + STP</h4>
+      <pre>
+enable
+configure terminal
+hostname SW2
+vlan 10
+name IT
+vlan 20
+name HR
+interface f0/2
+switchport mode trunk
+interface f0/3
+switchport mode access
+switchport access vlan 20
+spanning-tree mode pvst
+spanning-tree vlan 10,20 priority 8192
+exit
+      </pre>
+      
+      <h4>Router: Inter-VLAN Routing (Router-on-a-stick)</h4>
+      <pre>
+enable
+configure terminal
+interface g0/0.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+interface g0/0.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+interface g0/0
+no shutdown
+exit
+      </pre>
+      
+      <h3>Security Hardening Tips</h3>
+      <pre>
+no cdp run
+service password-encryption
+enable secret cisco123
+line console 0
+password consolepass
+login
+exit
+      </pre>
+    </div>
+
+    <div class="project">
+      <h2>Dual-Router, Dual-Switch Network</h2>
+      <h3>Project Overview</h3>
+      <pre>
+[ PC ]
+|
+[Switch2] -- [Router2]
+| |
+[Switch1] -- [Router1]
+      </pre>
+      
+      <h3>Knowledge capture</h3>
+      <ul>
+        <li><strong>RIP or OSPF:</strong> Dynamic routing between routers</li>
+        <li><strong>VLANs & Trunking:</strong> Segment networks</li>
+        <li><strong>Inter-VLAN Routing:</strong> Allow VLAN communication</li>
+        <li><strong>DHCP / NAT:</strong> IP address allocation & internet</li>
+        <li><strong>SSH / Telnet:</strong> Remote secure management</li>
+      </ul>
+      
+      <h3>Devices Needed</h3>
+      <ul>
+        <li>2x Cisco Routers (e.g. 2811, 2901, Packet Tracer routers work too)</li>
+        <li>2x Cisco Switches (e.g. 2960)</li>
+        <li>1x PC or VM (could be Kali, Windows, etc.)</li>
+        <li>Ethernet cables</li>
+        <li>Console access via PuTTY or Tera Term</li>
+      </ul>
+      
+      <h3>Connections</h3>
+      <ul>
+        <li>PC → Switch2 (F0/1)</li>
+        <li>Switch2 (F0/24) → Router2 (F0/0)</li>
+        <li>Switch1 (F0/24) → Router1 (F0/0)</li>
+        <li>Router1 (F0/1) ↔ Router2 (F0/1) (cross-link)</li>
+        <li>Switch1 ↔ Switch2 (optional trunk via F0/2)</li>
+      </ul>
+      
+      <h3>Configuration Commands</h3>
+      <h4>Router1 Basic Setup</h4>
+      <pre>
+enable
+configure terminal
+hostname R1
+interface f0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+interface f0/1
+ip address 10.0.0.1 255.255.255.0
+no shutdown
+exit
+router rip
+version 2
+network 192.168.10.0
+network 10.0.0.0
+no auto-summary
+      </pre>
+      
+      <h4>Router2 Basic Setup</h4>
+      <pre>
+enable
+configure terminal
+hostname R2
+interface f0/0
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+interface f0/1
+ip address 10.0.0.2 255.255.255.0
+no shutdown
+exit
+router rip
+version 2
+network 192.168.20.0
+network 10.0.0.0
+no auto-summary
+      </pre>
+      
+      <h4>Switch1 (Connected to Router1)</h4>
+      <pre>
+enable
+configure terminal
+hostname SW1
+vlan 10
+name R1-NET
+interface range f0/1 - 23
+switchport mode access
+switchport access vlan 10
+interface f0/24
+switchport mode access
+exit
+      </pre>
+      
+      <h4>Switch2 (Connected to PC and Router2)</h4>
+      <pre>
+enable
+configure terminal
+hostname SW2
+vlan 20
+name R2-NET
+interface range f0/1 - 23
+switchport mode access
+switchport access vlan 20
+interface f0/24
+switchport mode access
+exit
+      </pre>
+      
+      <h4>PC Setup</h4>
+      <ul>
+        <li>Set static IP:</li>
+        <li>IP: 192.168.20.10</li>
+        <li>Subnet: 255.255.255.0</li>
+        <li>Gateway: 192.168.20.1</li>
+      </ul>
     </div>
 
     <div class="project">
@@ -71,11 +300,10 @@
   </section>
 
   <footer>
-    <p>&copy; 2020-2025 &copy; Portfolio</p>
-    <p> 281 802 5806 byndzelen@gmail.com</p>
+    <p>&copy;2020-2025 &copy; Banye</p>
+    <p> 281 802 5806 && byndzelen@gmail.com</p>
   </footer>
 </body>
 </html>
-
-
+```
 
