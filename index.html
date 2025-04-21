@@ -1,321 +1,80 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Banye's Projects</title>
-  </head>
-  <body>
-    <h1>My Life Time Projects!</h1>
-    <h2>My cisco projects 
-1. Basic Network using STP + Inter-Vlan Routing
-Process
-stage 1
-Perfect â€” letâ€™s build a short, hands-on security project with Spanning Tree Protocol (STP) using 2 Cisco switches and 1 router, ideal for home labs or packet tracer/real gear.
-
-
-
- í´§ Project: Basic Network with STP + Inter-VLAN Routing
-
- í³˜ Goal:
-- Set up 2 switches with STP
-- Connect to a router for inter-VLAN routing
-- Configure STP to prevent loops
-- Practice basic switch hardening and verification
-
-
-
- í·± Network Topology
-
-```
-[Router]
-   |
-[SW1]-[SW2]
-   |
- PCs
-```
-
-- Router: Inter-VLAN routing (Router-on-a-stick)
-- SW1 & SW2: STP active to prevent switching loops
-- VLANs: 10 (IT), 20 (HR)
-
-
-
- í·ª Devices Used
-- 2x Cisco switches (real or Packet Tracer)
-- 1x Cisco router
-- 2x PCs (optional for testing)
-- Ethernet cables
-
-
- âš™ï¸ Connection Instructions
-1. Router G0/0 â†’ Switch1 F0/1 (trunk)
-2. Switch1 F0/2 â†” Switch2 F0/2 (trunk)
-3. PC1 â†’ SW1 F0/3
-4. PC2 â†’ SW2 F0/3
-
-
-
- Configuration Commands
-
- í´¹Switch 1: Configure VLANs + STP
-
-```bash
-enable
-configure terminal
-
-hostname SW1
-
-vlan 10
-name IT
-vlan 20
-name HR
-
-interface range f0/1 - 2
-switchport mode trunk
-
-interface f0/3
-switchport mode access
-switchport access vlan 10
-
-spanning-tree mode pvst
-spanning-tree vlan 10,20 priority 4096
-
-exit
-```
-
-
-
- í´¹ Switch 2: VLANs + STP
-
-```bash
-enable
-configure terminal
-
-hostname SW2
-
-vlan 10
-name IT
-vlan 20
-name HR
-
-interface f0/2
-switchport mode trunk
-
-interface f0/3
-switchport mode access
-switchport access vlan 20
-
-spanning-tree mode pvst
-spanning-tree vlan 10,20 priority 8192
-
-exit
-```
-
-> í·  SW1 has lower STP priority, so it becomes Root Bridge
-
-
-
- ï¿½ï¿½ Router: Inter-VLAN Routing (Router-on-a-stick)
-
-```bash
-enable
-configure terminal
-
-interface g0/0.10
-encapsulation dot1Q 10
-ip address 192.168.10.1 255.255.255.0
-
-interface g0/0.20
-encapsulation dot1Q 20
-ip address 192.168.20.1 255.255.255.0
-
-interface g0/0
-no shutdown
-
-exit
-```
-
-
-
- í´Security Hardening Tips 
-
-On both switches:
-
-```bash
-no cdp run
-service password-encryption
-enable secret cisco123
-line console 0
- password consolepass
- login
-exit
-```
-
-
-
- âœ… Verification Commands
-
- On Switch:
-```bash
-show vlan brief
-show spanning-tree
-show interface trunk
-```
- 
-
- On Router:
-```bash
-show ip interface brief
-ping 192.168.10.2
-ping 192.168.20.2
-```
- 
-
-
-    recap of work done
-- How STP prevents switching loops
-- Root bridge election (via STP priority)
-- Basic inter-VLAN routing with router-on-a-stick
-- Cisco switch hardening basics
-
-
-
-
-
-
-
-
-
-
-Project 2
-This setup lets you practice routing (RIP/OSPF), VLANs, trunking, inter-VLAN routing, DHCP, NAT, SSH, and more â€” perfect for cyber/networking skills.
-
-
-Awesome! Here's a complete Cisco home lab project using:
-â€¢	2 routers
-â€¢	2 switches
-â€¢	1 PC
-This setup lets you practice routing (RIP/OSPF), VLANs, trunking, inter-VLAN routing, DHCP, NAT, SSH, and more â€” perfect for cyber/networking skills.
-________________________________________
-í·  Project Overview: Dual-Router, Dual-Switch Network
-[ PC ]
-  |
-[Switch2] --- [Router2]
-     |             |
-[Switch1] --- [Router1]
-________________________________________
-í´§ What You'll Learn
-Feature	Purpose
-RIP or OSPF	Dynamic routing between routers
-VLANs & Trunking	Segment networks
-Inter-VLAN Routing	Allow VLAN communication
-DHCP / NAT	IP address allocation & internet
-SSH / Telnet	Remote secure management
-________________________________________
-í» ï¸ Devices Needed
-â€¢	2x Cisco Routers (e.g. 2811, 2901, Packet Tracer routers work too)
-â€¢	2x Cisco Switches (e.g. 2960)
-â€¢	1x PC or VM (could be Kali, Windows, etc.)
-â€¢	Ethernet cables
-â€¢	Console access via PuTTY or Tera Term
-________________________________________
-í¿—ï¸ Physical / Logical Topology
-í´Œ Connections
-â€¢	PC â†’ Switch2 (F0/1)
-â€¢	Switch2 (F0/24) â†’ Router2 (F0/0)
-â€¢	Switch1 (F0/24) â†’ Router1 (F0/0)
-â€¢	Router1 (F0/1) â†” Router2 (F0/1) (cross-link)
-â€¢	Switch1 â†” Switch2 (optional trunk via F0/2)
-________________________________________
-âš™ï¸ Step-by-Step Configuration
-________________________________________
-í´¹ 1. Router1 Basic Setup
-enable
-configure terminal
-hostname R1
-interface f0/0
-ip address 192.168.10.1 255.255.255.0
-no shutdown
-exit
-
-interface f0/1
-ip address 10.0.0.1 255.255.255.0
-no shutdown
-exit
-
-router rip
-version 2
-network 192.168.10.0
-network 10.0.0.0
-no auto-summary
-________________________________________
-í´¹ 2. Router2 Basic Setup
-enable
-configure terminal
-hostname R2
-interface f0/0
-ip address 192.168.20.1 255.255.255.0
-no shutdown
-exit
-
-interface f0/1
-ip address 10.0.0.2 255.255.255.0
-no shutdown
-exit
-
-router rip
-version 2
-network 192.168.20.0
-network 10.0.0.0
-no auto-summary
-________________________________________
-í´¹ 3. Switch1 (Connected to Router1)
-enable
-configure terminal
-hostname SW1
-
-vlan 10
-name R1-NET
-
-interface range f0/1 - 23
-switchport mode access
-switchport access vlan 10
-
-interface f0/24
-switchport mode access
-exit
-________________________________________
-í´¹ 4. Switch2 (Connected to PC and Router2)
-enable
-configure terminal
-hostname SW2
-
-vlan 20
-name R2-NET
-
-interface range f0/1 - 23
-switchport mode access
-switchport access vlan 20
-
-interface f0/24
-switchport mode access
-exit
-________________________________________
-í´¹ 5. PC Setup
-â€¢	Set static IP:
-o	IP: 192.168.20.10
-o	Subnet: 255.255.255.0
-o	Gateway: 192.168.20.1
-You should now be able to:
-â€¢	Ping Router2 from PC
-â€¢	Ping Router1 from PC
-â€¢	(optional) SSH into routers (configure SSH first)
-
-
-
-
-
-
-/>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Life Time Projects</title>
+  <style>
+    body {
+      font-family: Times New Roman, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #007acc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    section {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .project {
+      background: blue;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .project h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .project p {
+      text-align: center;
+    }
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Life Time Projects</h1>
+  </header>
+
+  <section>
+    <div class="project">
+      <h2>Cyber Lab Home Network</h2>
+      <p>Set up using Kali Linux, 2 Cisco Routers, 2 Switches. Integrated with TFTP server and Vagrant VMs.</p>
+    </div>
+
+    <div class="project">
+      <h2>Virtualization for Security Testing</h2>
+      <p>Used Metasploitable 3 and Kali VM with VirtualBox for penetration testing training.</p>
+    </div>
+
+    <div class="project">
+      <h2>Network Monitoring using Glances</h2>
+      <p>Implemented Glances on Kali to monitor VM network traffic and system resources.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2021-2025 My Portfolio</p>
+  </footer>
+</body>
 </html>
+
+
 
