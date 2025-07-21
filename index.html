@@ -1,46 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Maintenance Inflight</title>
-  <style>
-    body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      margin: 0;
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-    }
-    img.cyber-img {
-      max-width: 300px;
-      margin-bottom: 1em;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Tools Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #0d1117;
+            --secondary: #161b22;
+            --accent: #238636;
+            --accent-light: #2ea043;
+            --text: #c9d1d9;
+            --text-light: #8b949e;
+            --border: #30363d;
+            --card: #0d1117;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), #0a0d12);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #2ea043, #3fb950);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 700px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background-color: var(--secondary);
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(35, 134, 54, 0.3);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .filter-btn {
+            background: var(--secondary);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .stat-card {
+            background: var(--secondary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-light);
+        }
+        
+        .tools-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .tool-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+        
+        .tool-header {
+            padding: 1.2rem;
+            background: var(--secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tool-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #1f6feb);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .tool-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .tool-type {
+            display: inline-block;
+            background: rgba(35, 134, 54, 0.15);
+            color: var(--accent-light);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+        
+        .tool-body {
+            padding: 1.2rem;
+        }
+        
+        .tool-description {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            min-height: 80px;
+        }
+        
+        .tool-features {
+            margin-top: 1rem;
+        }
+        
+        .tool-features h4 {
+            margin-bottom: 8px;
+            color: var(--accent-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features-list {
+            list-style-type: none;
+        }
+        
+        .features-list li {
+            padding: 6px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-light);
+            font-weight: bold;
+        }
+        
+        .tool-footer {
+            padding: 1rem 1.2rem;
+            background: var(--secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tool-links a {
+            color: var(--accent-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .tool-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .tool-license {
+            background: rgba(56, 139, 253, 0.15);
+            color: #58a6ff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin: 2rem 0 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        @media (max-width: 768px) {
+            .tools-container {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-card {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-shield-alt"></i> Cybersecurity Tools Directory</h1>
+            <p class="tagline">Discover essential tools for cybersecurity professionals. Filter by category or search for specific tools.</p>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search tools by name, category, or feature...">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Tools</button>
+                    <button class="filter-btn" data-filter="packet">Packet Analysis</button>
+                    <button class="filter-btn" data-filter="pentest">Penetration Testing</button>
+                    <button class="filter-btn" data-filter="network">Networking</button>
+                    <button class="filter-btn" data-filter="scan">Scanning</button>
+                    <button class="filter-btn" data-filter="forensics">Forensics</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number">42</div>
+                <div>Tools Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">6</div>
+                <div>Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">18</div>
+                <div>Open Source</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">24</div>
+                <div>Free Tools</div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Featured Cybersecurity Tools</h2>
+        <div class="tools-container" id="toolsContainer">
+            <!-- Tools will be dynamically inserted here -->
+        </div>
+    </div>
 
-  <!-- Cyber Image (sample free URL from Unsplash) -->
-  <img src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=800&q=80"
-       alt="Cyber Scene"
-       class="cyber-img">
+    <script>
+        // Cybersecurity tools data
+        const tools = [
+            {
+                id: 1,
+                name: "Wireshark",
+                type: "Packet Analysis",
+                description: "The world's foremost and widely-used network protocol analyzer. Lets you see what's happening on your network at a microscopic level.",
+                features: [
+                    "Deep inspection of hundreds of protocols",
+                    "Live capture and offline analysis",
+                    "Rich VoIP analysis",
+                    "Decryption support for many protocols"
+                ],
+                license: "GPL",
+                link: "https://www.wireshark.org"
+            },
+            {
+                id: 2,
+                name: "Metasploit Framework",
+                type: "Penetration Testing",
+                description: "A powerful penetration testing platform that enables you to find, exploit, and validate vulnerabilities.",
+                features: [
+                    "Open-source exploit development",
+                    "Payload generation",
+                    "Post-exploitation modules",
+                    "Integration with vulnerability scanners"
+                ],
+                license: "BSD",
+                link: "https://www.metasploit.com"
+            },
+            {
+                id: 3,
+                name: "Nmap",
+                type: "Scanning",
+                description: "Network Mapper - a free and open source utility for network discovery and security auditing.",
+                features: [
+                    "Host discovery",
+                    "Port scanning",
+                    "Service and version detection",
+                    "OS detection",
+                    "Scriptable interaction"
+                ],
+                license: "GPL",
+                link: "https://nmap.org"
+            },
+            {
+                id: 4,
+                name: "Burp Suite",
+                type: "Penetration Testing",
+                description: "An integrated platform for performing security testing of web applications.",
+                features: [
+                    "Web vulnerability scanning",
+                    "Advanced manual testing tools",
+                    "Automated crawling",
+                    "Extensibility with BApps"
+                ],
+                license: "Commercial",
+                link: "https://portswigger.net/burp"
+            },
+            {
+                id: 5,
+                name: "Nessus",
+                type: "Scanning",
+                description: "A comprehensive vulnerability scanner that identifies vulnerabilities, configuration issues, and malware.",
+                features: [
+                    "Vulnerability scanning",
+                    "Configuration auditing",
+                    "Malware detection",
+                    "Sensitive data discovery"
+                ],
+                license: "Commercial",
+                link: "https://www.tenable.com/products/nessus"
+            },
+            {
+                id: 6,
+                name: "tcpdump",
+                type: "Packet Analysis",
+                description: "A powerful command-line packet analyzer that allows users to display TCP/IP packets being transmitted over the network.",
+                features: [
+                    "Command-line packet capture",
+                    "Powerful filtering capabilities",
+                    "Supports multiple network interfaces",
+                    "Output in various formats"
+                ],
+                license: "BSD",
+                link: "https://www.tcpdump.org"
+            },
+            {
+                id: 7,
+                name: "OWASP ZAP",
+                type: "Penetration Testing",
+                description: "The Zed Attack Proxy (ZAP) is one of the world's most popular free security tools for finding vulnerabilities in web applications.",
+                features: [
+                    "Automated scanner",
+                    "Manual testing tools",
+                    "REST API for integration",
+                    "Extensible with add-ons"
+                ],
+                license: "Apache 2.0",
+                link: "https://www.zaproxy.org"
+            },
+            {
+                id: 8,
+                name: "Snort",
+                type: "Network Security",
+                description: "An open-source network intrusion detection system capable of real-time traffic analysis and packet logging.",
+                features: [
+                    "Real-time traffic analysis",
+                    "Packet logging",
+                    "Protocol analysis",
+                    "Content searching/matching"
+                ],
+                license: "GPL",
+                link: "https://www.snort.org"
+            },
+            {
+                id: 9,
+                name: "Autopsy",
+                type: "Forensics",
+                description: "A digital forensics platform and graphical interface to The Sleuth Kit and other digital forensics tools.",
+                features: [
+                    "Timeline analysis",
+                    "Keyword searching",
+                    "Web artifact analysis",
+                    "Multimedia extraction"
+                ],
+                license: "Apache 2.0",
+                link: "https://www.autopsy.com"
+            },
+            {
+                id: 10,
+                name: "John the Ripper",
+                type: "Password Cracking",
+                description: "An Open Source password security auditing and password recovery tool available for many operating systems.",
+                features: [
+                    "Multiple password cracking modes",
+                    "Support for hundreds of hash types",
+                    "Automatic hash type detection",
+                    "Multi-platform support"
+                ],
+                license: "GPL",
+                link: "https://www.openwall.com/john"
+            },
+            {
+                id: 11,
+                name: "Aircrack-ng",
+                type: "Wireless Security",
+                description: "A complete suite of tools to assess WiFi network security focusing on monitoring, attacking, testing and cracking.",
+                features: [
+                    "802.11a/b/g WEP and WPA cracking",
+                    "Packet capture and injection",
+                    "WPS vulnerability testing",
+                    "Fake access point creation"
+                ],
+                license: "GPL",
+                link: "https://www.aircrack-ng.org"
+            },
+            {
+                id: 12,
+                name: "SQLMap",
+                type: "Penetration Testing",
+                description: "An open source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws.",
+                features: [
+                    "Full support for multiple DBMS",
+                    "Automatic recognition of hash formats",
+                    "Database fingerprinting",
+                    "Password cracking"
+                ],
+                license: "GPL",
+                link: "https://sqlmap.org"
+            }
+        ];
 
-  <!-- Heading -->
-  <h1><dea7> Maintenance InFlight</h1>
-
-  <p>This website is currently undergoing scheduled maintenance.<br>
-     Please check back soon. Thank you for your patience!</p>
-
+        // Function to render tools
+        function renderTools(toolsArray) {
+            const container = document.getElementById('toolsContainer');
+            container.innerHTML = '';
+            
+            if (toolsArray.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search fa-3x" style="margin-bottom: 20px;"></i>
+                        <h3>No tools found</h3>
+                        <p>Try adjusting your search or filter criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            toolsArray.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.innerHTML = `
+                    <div class="tool-header">
+                        <div class="tool-title">
+                            <div class="tool-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <div>
+                                <div class="tool-name">${tool.name}</div>
+                                <span class="tool-type">${tool.type}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tool-body">
+                        <p class="tool-description">${tool.description}</p>
+                        <div class="tool-features">
+                            <h4><i class="fas fa-star"></i> Key Features</h4>
+                            <ul class="features-list">
+                                ${tool.features.map(feature => `<li>${feature}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tool-footer">
+                        <div class="tool-links">
+                            <a href="${tool.link}" target="_blank"><i class="fas fa-external-link-alt"></i> Official Site</a>
+                        </div>
+                        <div class="tool-license">${tool.license} License</div>
+                    </div>
+                `;
+                container.appendChild(toolCard);
+            });
+        }
+        
+        // Initial render
+        renderTools(tools);
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('searchInput');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Apply filters
+                applyFilters();
+            });
+        });
+        
+        // Search functionality
+        searchInput.addEventListener('input', applyFilters);
+        
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            
+            const filteredTools = tools.filter(tool => {
+                // Check category filter
+                const categoryMatch = activeFilter === 'all' || 
+                                    tool.type.toLowerCase().includes(activeFilter) ||
+                                    tool.type.split(' ').some(word => word.toLowerCase().startsWith(activeFilter));
+                
+                // Check search term
+                const searchMatch = tool.name.toLowerCase().includes(searchTerm) ||
+                                   tool.type.toLowerCase().includes(searchTerm) ||
+                                   tool.description.toLowerCase().includes(searchTerm) ||
+                                   tool.features.some(feature => feature.toLowerCase().includes(searchTerm));
+                
+                return categoryMatch && searchMatch;
+            });
+            
+            renderTools(filteredTools);
+        }
+        
+        // Add a simple animation on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('h1').style.opacity = '0';
+            document.querySelector('h1').style.transform = 'translateY(20px)';
+            document.querySelector('h1').style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            setTimeout(() => {
+                document.querySelector('h1').style.opacity = '1';
+                document.querySelector('h1').style.transform = 'translateY(0)';
+            }, 300);
+        });
+    </script>
 </body>
 </html>
-
